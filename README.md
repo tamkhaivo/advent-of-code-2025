@@ -6,6 +6,14 @@ This project implements solutions for the Advent of Code 2025 challenges using J
 
 - JDK 21 or later (must support `jdk.incubator.vector` for Day 1).
 
+## Dependencies
+
+Please download the following libraries and place them in the `lib/` directory:
+
+- [junit-platform-console-standalone-1.10.2.jar](https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.2/junit-platform-console-standalone-1.10.2.jar)
+- [log4j-api-2.23.1.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.23.1/log4j-api-2.23.1.jar)
+- [log4j-core-2.23.1.jar](https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.23.1/log4j-core-2.23.1.jar)
+
 ## Day 1
 
 ### Compilation & Running
@@ -85,4 +93,36 @@ javac -cp ".:lib/*" day2/BenchmarkRunner.java && java -cp ".:lib/*" day2.Benchma
 - `day1/`: Day 1 solutions and extra credit (Vector API).
 - `day2/`: Day 2 solutions and extra credit (Thread Pool).
 - `lib/`: Dependencies (JUnit, Log4j).
+
+## Optimized Solutions
+
+### Day 1
+
+To compile and run the optimized solutions for Day 1:
+
+```bash
+# Compile Optimized Solutions
+javac --add-modules jdk.incubator.vector -cp ".:lib/*" -d . day1/Day1Part1Optimized.java day1/Day1Part2Optimized.java
+
+# Run Part 1 Optimized
+java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part1Optimized
+
+# Run Part 2 Optimized
+java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part2Optimized
+```
+
+### Day 2
+
+To compile and run the optimized solutions for Day 2:
+
+```bash
+# Compile Optimized Solutions
+javac -cp ".:lib/*" day2/Day2Part1Optimized.java day2/Day2Part2Optimized.java
+
+# Run Part 1 Optimized
+java -cp ".:lib/*" day2.Day2Part1Optimized
+
+# Run Part 2 Optimized
+java -cp ".:lib/*" day2.Day2Part2Optimized
+```
 
