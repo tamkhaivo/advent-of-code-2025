@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Solves Day 2 Part 1 using a FixedThreadPool for concurrent processing.
- * Adheres to GEMINI.md engineering principles.
  */
 public class Day2Part1ExtraCredit {
 
