@@ -5,8 +5,8 @@ import java.io.PrintStream;
 
 public class BenchmarkRunner {
 
-    private static final int WARMUP_ITERATIONS = 100;
-    private static final int MEASUREMENT_ITERATIONS = 10000;
+    private static final int WARMUP_ITERATIONS = 10;
+    private static final int MEASUREMENT_ITERATIONS = 100;
 
     public static void main(String[] args) {
         System.out.println("Starting Day 2 Benchmarks...");
@@ -19,6 +19,8 @@ public class BenchmarkRunner {
             runBenchmark("Day 2 Part 1", () -> day2part1.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 2 Part 2", () -> day2part2.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 2 Part 1 Extra Credit", () -> Day2Part1ExtraCredit.main(new String[] {}),
+                    nullPrintStream);
+            runBenchmark("Day 2 Part 2 Extra Credit", () -> Day2Part2ExtraCredit.main(new String[] {}),
                     nullPrintStream);
         } finally {
             System.setOut(originalOut);

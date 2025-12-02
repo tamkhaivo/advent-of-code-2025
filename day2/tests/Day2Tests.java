@@ -1,5 +1,6 @@
 package day2.tests;
 
+import day2.Day2Part1ExtraCredit;
 import day2.day2part1;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,5 +64,20 @@ public class Day2Tests {
         assertFalse(day2part1.isInvalidID(101));
         // 123 -> valid (odd length)
         assertFalse(day2part1.isInvalidID(123));
+    }
+
+    @Test
+    public void testIsInvalidID_ExtraCredit() {
+        // Valid cases (should return true for "isInvalidID" based on problem
+        // description)
+        // Example: 1212 -> length 4, 12 == 12 -> true
+        assertTrue(Day2Part1ExtraCredit.isInvalidID(1212));
+        assertTrue(Day2Part1ExtraCredit.isInvalidID(99));
+        assertTrue(Day2Part1ExtraCredit.isInvalidID(123123));
+
+        // Invalid cases (should return false)
+        assertFalse(Day2Part1ExtraCredit.isInvalidID(123)); // Odd length
+        assertFalse(Day2Part1ExtraCredit.isInvalidID(1234)); // Even length, 12 != 34
+        assertFalse(Day2Part1ExtraCredit.isInvalidID(10)); // Even length, 1 != 0
     }
 }

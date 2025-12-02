@@ -5,25 +5,20 @@ import java.io.PrintStream;
 
 public class BenchmarkRunner {
 
-    private static final int WARMUP_ITERATIONS = 1_000;
-    private static final int MEASUREMENT_ITERATIONS = 10_000;
+    private static final int WARMUP_ITERATIONS = 5;
+    private static final int MEASUREMENT_ITERATIONS = 20;
 
     public static void main(String[] args) {
-        System.out.println("Starting Benchmarks...");
+        System.out.println("Starting Day 1 Benchmarks...");
 
-        // Suppress output during execution to avoid I/O overhead affecting benchmarks
         PrintStream originalOut = System.out;
         ByteArrayOutputStream nullOut = new ByteArrayOutputStream();
         PrintStream nullPrintStream = new PrintStream(nullOut);
 
         try {
             runBenchmark("Day 1 Part 1", () -> Day1Part1.main(new String[] {}), nullPrintStream);
-            runBenchmark("Day 1 Part 2", () -> Day1Part2.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 1 Part 1 Extra Credit", () -> Day1Part1ExtraCredit.main(new String[] {}),
                     nullPrintStream);
-            runBenchmark("Day 1 Part 2 Extra Credit", () -> Day1Part2ExtraCredit.main(new String[] {}),
-                    nullPrintStream);
-            runBenchmark("Day 1 Part 1 Optimized", () -> Day1Part1Optimized.main(new String[] {}), nullPrintStream);
         } finally {
             System.setOut(originalOut);
         }

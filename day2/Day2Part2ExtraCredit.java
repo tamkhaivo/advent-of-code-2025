@@ -5,36 +5,45 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Solves Day 2 Part 1 using a FixedThreadPool for concurrent processing.
- * Adheres to GEMINI.md engineering principles.
+ * Solves Day 2 Part 2 using a FixedThreadPool for concurrent processing.
+ * 
+ * <p>
+ * This implementation reads ranges from a file, checks for "invalid" IDs within
+ * those ranges, and calculates the sum of all unique invalid IDs. It uses a
+ * thread pool to parallelize the search and a ConcurrentHashMap to ensure IDs
+ * are counted only once.
+ * </p>
  */
-public class Day2Part1ExtraCredit {
+public class Day2Part2ExtraCredit {
 
-    private static final Logger logger = LogManager.getLogger(Day2Part1ExtraCredit.class);
+    private static final Logger logger = LogManager.getLogger(Day2Part2ExtraCredit.class);
     private static final String FILE_PATH = "day2/day2.txt";
 
     public static void main(String[] args) {
-        logger.info("Starting Day 2 Part 1 Extra Credit calculation.");
-        Optional<List<Range>> linesResult = readLines(FILE_PATH);
+        logger.info("Starting Day 2 Part 2 Extra Credit calculation.");
+
+        Optional<List<long[]>> linesResult = readLines(FILE_PATH);
 
         if (linesResult.isEmpty()) {
             logger.error("Failed to read lines from file: {}", FILE_PATH);
             return;
         }
 
-        List<Range> lines = linesResult.get();
+        List<long[]> lines = linesResult.get();
         if (lines.isEmpty()) {
             logger.warn("No lines found in file or file is empty.");
             System.out.println("0");
@@ -51,11 +60,11 @@ public class Day2Part1ExtraCredit {
      * Reads lines from the input file and parses them into start/end ranges.
      *
      * @param filePath The path to the input file.
-     * @return An Optional containing a list of Range objects on success, or empty
-     *         on failure.
+     * @return An Optional containing a list of long arrays {start, end} on success,
+     *         or empty on failure.
      */
-    private static Optional<List<Range>> readLines(String filePath) {
-        List<Range> lines = new ArrayList<>();
+    private static Optional<List<long[]>> readLines(String filePath) {
+        List<long[]> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -69,7 +78,7 @@ public class Day2Part1ExtraCredit {
                         }
                         long start = Long.parseLong(ranges[0]);
                         long end = Long.parseLong(ranges[1]);
-                        lines.add(new Range(start, end));
+                        lines.add(new long[] { start, end });
                     } catch (NumberFormatException e) {
                         logger.warn("Skipping invalid number in range: {}", value, e);
                     }
@@ -83,26 +92,27 @@ public class Day2Part1ExtraCredit {
     }
 
     /**
-     * Counts the sum of invalid IDs using a thread pool.
+     * Counts the sum of unique invalid IDs using a thread pool.
      *
      * @param lines The list of ranges to process.
-     * @return The sum of invalid IDs.
+     * @return The sum of unique invalid IDs.
      */
-    private static long countInvalidIDsConcurrent(List<Range> lines) {
+    private static long countInvalidIDsConcurrent(List<long[]> lines) {
         int numThreads = Runtime.getRuntime().availableProcessors();
         logger.debug("Using {} threads for concurrent processing.", numThreads);
 
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        Set<Long> uniqueInvalidIds = ConcurrentHashMap.newKeySet();
         List<Future<Long>> futures = new ArrayList<>();
 
         // Determine chunk size to balance load
         int totalRanges = lines.size();
         int chunkSize = Math.max(1, totalRanges / (numThreads * 4));
 
-        for (int currentIdx = 0; currentIdx < totalRanges; currentIdx += chunkSize) {
-            int end = Math.min(currentIdx + chunkSize, totalRanges);
-            List<Range> chunk = lines.subList(currentIdx, end);
-            futures.add(executor.submit(new RangeProcessor(chunk)));
+        for (int i = 0; i < totalRanges; i += chunkSize) {
+            int end = Math.min(i + chunkSize, totalRanges);
+            List<long[]> chunk = lines.subList(i, end);
+            futures.add(executor.submit(new RangeProcessor(chunk, uniqueInvalidIds)));
         }
 
         long totalSum = 0;
@@ -133,19 +143,26 @@ public class Day2Part1ExtraCredit {
      * Task to process a chunk of ranges.
      */
     private static class RangeProcessor implements Callable<Long> {
-        private final List<Range> ranges;
+        private final List<long[]> ranges;
+        private final Set<Long> uniqueInvalidIds;
 
-        public RangeProcessor(List<Range> ranges) {
+        public RangeProcessor(List<long[]> ranges, Set<Long> uniqueInvalidIds) {
             this.ranges = ranges;
+            this.uniqueInvalidIds = uniqueInvalidIds;
         }
 
         @Override
         public Long call() {
             long localSum = 0;
-            for (Range range : ranges) {
-                for (long currentID = range.start(); currentID <= range.end(); currentID++) {
+            for (long[] range : ranges) {
+                long start = range[0];
+                long end = range[1];
+                for (long currentID = start; currentID <= end; currentID++) {
                     if (isInvalidID(currentID)) {
-                        localSum += currentID;
+                        // add returns true if the set did not already contain the element
+                        if (uniqueInvalidIds.add(currentID)) {
+                            localSum += currentID;
+                        }
                     }
                 }
             }
@@ -154,25 +171,29 @@ public class Day2Part1ExtraCredit {
     }
 
     /**
-     * Value Object representing a numeric range.
-     */
-    private record Range(long start, long end) {
-    }
-
-    /**
-     * Checks if an ID is invalid according to Part 1 rules.
-     * Rule: Even length and first half equals second half.
+     * Checks if an ID is invalid according to the Part 2 rules.
      * 
      * @param ID The ID to check.
      * @return True if the ID is invalid, false otherwise.
      */
-    public static boolean isInvalidID(long ID) {
-        String s = Long.toString(ID);
-        if (s.length() % 2 != 0) {
-            return false;
+    private static boolean isInvalidID(long ID) {
+        String sID = Long.toString(ID);
+        List<String> numSlices = new ArrayList<>();
+        for (int sliceLength = 1; sliceLength <= sID.length() / 2; sliceLength++) {
+            for (int currentIndex = 0; currentIndex < sID.length(); currentIndex += sliceLength) {
+                numSlices.add(sID.substring(currentIndex, Math.min(currentIndex + sliceLength, sID.length())));
+            }
+            boolean flag = true;
+            for (int currentSlice = 0; currentSlice < numSlices.size() - 1; currentSlice++) {
+                if (!numSlices.get(currentSlice).equals(numSlices.get(currentSlice + 1))) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                return true;
+            }
+            numSlices.clear();
         }
-        String firstHalf = s.substring(0, s.length() / 2);
-        String secondHalf = s.substring(s.length() / 2);
-        return firstHalf.equals(secondHalf);
+        return false;
     }
 }
