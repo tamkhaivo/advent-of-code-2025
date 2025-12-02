@@ -54,7 +54,7 @@ java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part1ExtraCredit
 
 **Part 1 (Optimized):**
 ```bash
-java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part1Optimized
+java --add-modules jdk.incubator.vector --add-exports java.base/sun.nio.ch=ALL-UNNAMED -cp ".:lib/*" day1.Day1Part1Optimized
 ```
 
 **Part 2:**
@@ -72,7 +72,7 @@ java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part2ExtraCredit
 Compare the performance of the different implementations.
 
 ```bash
-java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.BenchmarkRunner
+java --add-modules jdk.incubator.vector --add-exports java.base/sun.nio.ch=ALL-UNNAMED -cp ".:lib/*" day1.BenchmarkRunner
 ```
 
 ### 4. Running Tests

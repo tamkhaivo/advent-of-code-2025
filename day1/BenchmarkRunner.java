@@ -5,8 +5,8 @@ import java.io.PrintStream;
 
 public class BenchmarkRunner {
 
-    private static final int WARMUP_ITERATIONS = 5;
-    private static final int MEASUREMENT_ITERATIONS = 10;
+    private static final int WARMUP_ITERATIONS = 1_000;
+    private static final int MEASUREMENT_ITERATIONS = 10_000;
 
     public static void main(String[] args) {
         System.out.println("Starting Benchmarks...");
@@ -63,5 +63,6 @@ public class BenchmarkRunner {
 
         System.out.printf("%-25s | Avg: %8.3f ms | Min: %8.3f ms | Max: %8.3f ms%n",
                 name, avgTimeMs, minTimeMs, maxTimeMs);
+        System.gc();
     }
 }
