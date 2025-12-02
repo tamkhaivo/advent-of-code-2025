@@ -46,7 +46,8 @@ target/
 build/
 .gradle/
 
-# Data files
-day*.txt
-input.txt
-*.dat
+# JUnit
+lib/
+
+# GEMINI.md
+GEMINI.md
