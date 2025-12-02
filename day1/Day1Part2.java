@@ -16,9 +16,6 @@ public class Day1Part2 {
     static long count = 0; // Use long just in case, though int is probably fine
 
     public static void main(String[] args) {
-        dialPosition = 50;
-        count = 0;
-
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {

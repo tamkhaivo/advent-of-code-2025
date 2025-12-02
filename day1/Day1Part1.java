@@ -14,12 +14,9 @@ import java.io.IOException;
 public class Day1Part1 {
     static String filePath = "day1/day1.txt";
     static int dialPosition = 50;
-    static int count = 0;
+    static long count = 0;
 
     public static void main(String[] args) {
-        dialPosition = 50;
-        count = 0;
-
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
