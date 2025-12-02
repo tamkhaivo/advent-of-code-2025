@@ -45,7 +45,6 @@ public class day2part2 {
                 }
             }
         }
-        System.out.println(invalidIDs);
         return count;
     }
 

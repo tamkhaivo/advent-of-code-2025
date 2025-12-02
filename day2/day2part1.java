@@ -49,7 +49,7 @@ public class day2part1 {
         return count;
     }
 
-    private static boolean isInvalidID(long ID) {
+    public static boolean isInvalidID(long ID) {
         String s = Long.toString(ID);
         if (s.length() % 2 != 0) {
             return false;
