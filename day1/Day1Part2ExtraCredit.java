@@ -7,12 +7,12 @@ import day1.simulation.DialSimulator;
 import day1.simulation.VectorizedSimulationStrategy;
 
 /**
- * Main entry point for the Day 1 Part 1 Extra Credit solution.
+ * Main entry point for the Day 1 Part 2 Extra Credit solution.
  */
-public class Day1Part1ExtraCredit {
+public class Day1Part2ExtraCredit {
     static final String FILE_PATH = "day1/day1.txt";
     static final int INITIAL_DIAL_POSITION = 50;
-    private static final Logger logger = LogManager.getLogger(Day1Part1ExtraCredit.class);
+    private static final Logger logger = LogManager.getLogger(Day1Part2ExtraCredit.class);
 
     public static void main(String[] args) {
         logger.info("Application started");
@@ -20,8 +20,8 @@ public class Day1Part1ExtraCredit {
         DialSimulator simulator = new DialSimulator.Builder()
                 .filePath(FILE_PATH)
                 .initialPosition(INITIAL_DIAL_POSITION)
-                .strategy(new VectorizedSimulationStrategy(
-                        VectorizedSimulationStrategy.SimulationType.PART1_LAND_ON_ZERO))
+                .strategy(
+                        new VectorizedSimulationStrategy(VectorizedSimulationStrategy.SimulationType.PART2_CROSS_ZERO))
                 .build();
 
         Optional<Integer> result = simulator.run();

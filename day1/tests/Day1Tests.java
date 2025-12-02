@@ -81,4 +81,57 @@ public class Day1Tests {
         assertEquals(2, result.get());
     }
 
+    @Test
+    public void testPart2Example() {
+        VectorizedSimulationStrategy strategy = new VectorizedSimulationStrategy();
+        // Example from Part 2 Extra Credit:
+        // Start: 50
+        // L68, L30, R48, L5, R60, L55, L1, L99, R14, L82
+        int[] steps = { -68, -30, 48, -5, 60, -55, -1, -99, 14, -82 };
+        Optional<Integer> result = strategy.run(steps, 50);
+        assertTrue(result.isPresent());
+        assertEquals(6, result.get());
+    }
+
+    @Test
+    public void testVectorizedStrategyPart1Simple() {
+        VectorizedSimulationStrategy strategy = new VectorizedSimulationStrategy(
+                VectorizedSimulationStrategy.SimulationType.PART1_LAND_ON_ZERO);
+        // Start: 50
+        // 1. 50 + 50 = 100 (0) -> Count 1
+        // 2. 0 + 100 = 100 (0) -> Count 2
+        // 3. 0 + 200 = 200 (0) -> Count 3
+        // 4. 0 - 50 = -50 (50) -> Count 3
+        int[] steps = { 50, 100, 200, -50 };
+        Optional<Integer> result = strategy.run(steps, 50);
+        assertTrue(result.isPresent());
+        assertEquals(3, result.get());
+    }
+
+    @Test
+    public void testVectorizedStrategyPart1LargeStep() {
+        VectorizedSimulationStrategy strategy = new VectorizedSimulationStrategy(
+                VectorizedSimulationStrategy.SimulationType.PART1_LAND_ON_ZERO);
+        // Start: 50
+        // Step: +200 -> 250 % 100 = 50.
+        // Lands on 50. Count 0.
+        // (Part 2 would count 2).
+        int[] steps = { 200 };
+        Optional<Integer> result = strategy.run(steps, 50);
+        assertTrue(result.isPresent());
+        assertEquals(0, result.get());
+    }
+
+    @Test
+    public void testOptimizedSolution() {
+        // L50, R100
+        // Start: 50
+        // 1. 50 - 50 = 0 (Count 1)
+        // 2. 0 + 100 = 100 (0) (Count 2)
+        String input = "L50\nR100";
+        java.nio.ByteBuffer buffer = java.nio.ByteBuffer.wrap(input.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        long result = day1.Day1Part1Optimized.solve(buffer, input.length());
+        assertEquals(2, result);
+    }
+
 }

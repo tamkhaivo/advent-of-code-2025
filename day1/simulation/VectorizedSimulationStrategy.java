@@ -18,12 +18,28 @@ import java.util.concurrent.Future;
 
 /**
  * A simulation strategy that uses the Vector API and a thread pool to optimize
- * performance.
+ * performance. It uses a prefix sum approach to determine the start position of
+ * each step, and then uses SIMD operations to count crossings for multiple
+ * steps in parallel.
  */
 public class VectorizedSimulationStrategy implements SimulationStrategy {
 
+    public enum SimulationType {
+        PART1_LAND_ON_ZERO,
+        PART2_CROSS_ZERO
+    }
+
     private static final Logger logger = LogManager.getLogger(VectorizedSimulationStrategy.class);
     private static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;
+    private final SimulationType type;
+
+    public VectorizedSimulationStrategy() {
+        this(SimulationType.PART2_CROSS_ZERO);
+    }
+
+    public VectorizedSimulationStrategy(SimulationType type) {
+        this.type = type;
+    }
 
     @Override
     public Optional<Integer> run(int[] steps, int initialPosition) {
@@ -58,7 +74,13 @@ public class VectorizedSimulationStrategy implements SimulationStrategy {
             // Phase 2: Count zeroes
             List<Future<Integer>> phase2Futures = new ArrayList<>();
             for (int i = 0; i < chunks.size(); i++) {
-                phase2Futures.add(executor.submit(new ZeroCountTask(chunks.get(i), startPositions[i])));
+                ZeroCountTask task;
+                if (type == SimulationType.PART1_LAND_ON_ZERO) {
+                    task = new Part1ZeroCountTask(chunks.get(i), startPositions[i]);
+                } else {
+                    task = new Part2ZeroCountTask(chunks.get(i), startPositions[i]);
+                }
+                phase2Futures.add(executor.submit(task));
             }
 
             int totalZeroes = 0;
@@ -112,9 +134,9 @@ public class VectorizedSimulationStrategy implements SimulationStrategy {
         }
     }
 
-    static class ZeroCountTask implements Callable<Integer> {
-        private final Chunk chunk;
-        private final int startPosition;
+    abstract static class ZeroCountTask implements Callable<Integer> {
+        protected final Chunk chunk;
+        protected final int startPosition;
 
         public ZeroCountTask(Chunk chunk, int startPosition) {
             this.chunk = chunk;
@@ -131,11 +153,56 @@ public class VectorizedSimulationStrategy implements SimulationStrategy {
                 currentSum += chunk.data[chunk.start + i];
                 prefixSums[i] = currentSum;
             }
+            return doCount(prefixSums, len);
+        }
 
-            // 2. Vectorized check
+        protected abstract int doCount(int[] prefixSums, int len);
+    }
+
+    static class Part1ZeroCountTask extends ZeroCountTask {
+        public Part1ZeroCountTask(Chunk chunk, int startPosition) {
+            super(chunk, startPosition);
+        }
+
+        @Override
+        protected int doCount(int[] prefixSums, int len) {
             int count = 0;
             int i = 0;
 
+            // Vectorized Part 1: Check if (startPosition + prefixSum) % 100 == 0
+            for (; i < len - SPECIES.length(); i += SPECIES.length()) {
+                IntVector vPrefix = IntVector.fromArray(SPECIES, prefixSums, i);
+                IntVector vCurr = vPrefix.add(startPosition);
+
+                // v % 100 = v - (v / 100) * 100
+                IntVector vDiv = vCurr.div(100);
+                IntVector vRem = vCurr.sub(vDiv.mul(100));
+
+                VectorMask<Integer> mask = vRem.eq(0);
+                count += mask.trueCount();
+            }
+
+            // Tail loop for Part 1
+            for (; i < len; i++) {
+                if ((startPosition + prefixSums[i]) % 100 == 0) {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+
+    static class Part2ZeroCountTask extends ZeroCountTask {
+        public Part2ZeroCountTask(Chunk chunk, int startPosition) {
+            super(chunk, startPosition);
+        }
+
+        @Override
+        protected int doCount(int[] prefixSums, int len) {
+            int count = 0;
+            int i = 0;
+
+            // Vectorized Part 2: Check for zero crossings
             for (; i < len - SPECIES.length(); i += SPECIES.length()) {
                 // Load prefix sums and steps
                 IntVector vPrefix = IntVector.fromArray(SPECIES, prefixSums, i);
@@ -168,7 +235,7 @@ public class VectorizedSimulationStrategy implements SimulationStrategy {
                 count += vHits.reduceLanes(VectorOperators.ADD);
             }
 
-            // Tail loop
+            // Tail loop for Part 2
             for (; i < len; i++) {
                 int step = chunk.data[chunk.start + i];
                 int curr = startPosition + prefixSums[i];

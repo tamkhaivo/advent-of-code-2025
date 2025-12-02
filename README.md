@@ -28,7 +28,8 @@ To compile and run the tests:
 
 ```bash
 # Compile Tests (and dependencies)
-javac --add-modules jdk.incubator.vector -cp .:lib/junit-platform-console-standalone-1.10.2.jar:lib/log4j-api-2.23.1.jar:lib/log4j-core-2.23.1.jar -d . day1/simulation/*.java day1/tests/*.java
+javac --add-modules jdk.incubator.vector -cp ".:lib/*" -d . day1/*.java day1/simulation/*.java day1/tests/*.java
+
 
 # Run Tests
 java --add-modules jdk.incubator.vector -jar lib/junit-platform-console-standalone-1.10.2.jar -cp .:lib/log4j-api-2.23.1.jar:lib/log4j-core-2.23.1.jar -c day1.tests.Day1Tests
