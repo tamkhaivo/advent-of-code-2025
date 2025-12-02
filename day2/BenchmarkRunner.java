@@ -17,10 +17,14 @@ public class BenchmarkRunner {
 
         try {
             runBenchmark("Day 2 Part 1", () -> day2part1.main(new String[] {}), nullPrintStream);
-            runBenchmark("Day 2 Part 2", () -> day2part2.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 2 Part 1 Extra Credit", () -> Day2Part1ExtraCredit.main(new String[] {}),
                     nullPrintStream);
+            runBenchmark("Day 2 Part 1 Optimized", () -> Day2Part1Optimized.main(new String[] {}),
+                    nullPrintStream);
+            runBenchmark("Day 2 Part 2", () -> day2part2.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 2 Part 2 Extra Credit", () -> Day2Part2ExtraCredit.main(new String[] {}),
+                    nullPrintStream);
+            runBenchmark("Day 2 Part 2 Optimized", () -> Day2Part2Optimized.main(new String[] {}),
                     nullPrintStream);
         } finally {
             System.setOut(originalOut);
