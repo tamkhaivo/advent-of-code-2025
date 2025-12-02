@@ -4,8 +4,27 @@ import java.util.Optional;
 import day1.simulation.VectorizedSimulationStrategy;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
 
 public class Day1Tests {
+
+    @Test
+    public void testDay1Part2Optimized() throws IOException {
+        // Create a temporary file with known content
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("day1part2_test", ".txt");
+        String content = "L50\nR100";
+        java.nio.file.Files.write(tempFile, content.getBytes());
+
+        try {
+            long result = day1.Day1Part2Optimized.solve(tempFile.toString());
+            // Start 50.
+            // L50 -> 0 (Count 1)
+            // R100 -> 0 (Count 2)
+            assertEquals(2, result);
+        } finally {
+            java.nio.file.Files.delete(tempFile);
+        }
+    }
 
     @Test
     public void testVectorizedStrategySimple() {
