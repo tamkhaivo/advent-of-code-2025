@@ -17,6 +17,9 @@ public class Day1Part1 {
     static int count = 0;
 
     public static void main(String[] args) {
+        dialPosition = 50;
+        count = 0;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
