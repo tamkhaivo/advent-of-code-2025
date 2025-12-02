@@ -16,21 +16,23 @@ public class Day1Part1ExtraCredit {
 
     public static void main(String[] args) {
         logger.info("Application started");
-
-        DialSimulator simulator = new DialSimulator.Builder()
-                .filePath(FILE_PATH)
-                .initialPosition(INITIAL_DIAL_POSITION)
-                .strategy(new VectorizedSimulationStrategy(
-                        VectorizedSimulationStrategy.SimulationType.PART1_LAND_ON_ZERO))
-                .build();
-
-        Optional<Integer> result = simulator.run();
-
+        Optional<Integer> result = solve(FILE_PATH);
         if (result.isPresent()) {
             logger.info("Simulation completed successfully");
             System.out.println(result.get());
         } else {
             logger.error("Simulation failed. See previous logs for details");
         }
+    }
+
+    public static Optional<Integer> solve(String filePath) {
+        DialSimulator simulator = new DialSimulator.Builder()
+                .filePath(filePath)
+                .initialPosition(INITIAL_DIAL_POSITION)
+                .strategy(new VectorizedSimulationStrategy(
+                        VectorizedSimulationStrategy.SimulationType.PART1_LAND_ON_ZERO))
+                .build();
+
+        return simulator.run();
     }
 }

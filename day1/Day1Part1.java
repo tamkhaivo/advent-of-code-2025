@@ -13,10 +13,19 @@ import java.io.IOException;
 */
 public class Day1Part1 {
     static String filePath = "day1/day1.txt";
-    static int dialPosition = 50;
-    static long count = 0;
 
     public static void main(String[] args) {
+        try {
+            long result = solve(filePath);
+            System.out.println(result);
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+    }
+
+    public static long solve(String filePath) throws IOException {
+        int dialPosition = 50;
+        long count = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -31,10 +40,7 @@ public class Day1Part1 {
                     count++;
                 }
             }
-            System.out.println(count);
-        } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
         }
-
+        return count;
     }
 }

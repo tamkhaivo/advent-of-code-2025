@@ -35,25 +35,26 @@ public class Day2Part2ExtraCredit {
 
     public static void main(String[] args) {
         logger.info("Starting Day 2 Part 2 Extra Credit calculation.");
+        long invalidIDCount = solve(FILE_PATH);
+        System.out.println(invalidIDCount);
+        logger.info("Calculation completed. Result: {}", invalidIDCount);
+    }
 
-        Optional<List<long[]>> linesResult = readLines(FILE_PATH);
+    public static long solve(String filePath) {
+        Optional<List<long[]>> linesResult = readLines(filePath);
 
         if (linesResult.isEmpty()) {
-            logger.error("Failed to read lines from file: {}", FILE_PATH);
-            return;
+            logger.error("Failed to read lines from file: {}", filePath);
+            return 0;
         }
 
         List<long[]> lines = linesResult.get();
         if (lines.isEmpty()) {
             logger.warn("No lines found in file or file is empty.");
-            System.out.println("0");
-            return;
+            return 0;
         }
 
-        long invalidIDCount = countInvalidIDsConcurrent(lines);
-        System.out.println(invalidIDCount);
-
-        logger.info("Calculation completed. Result: {}", invalidIDCount);
+        return countInvalidIDsConcurrent(lines);
     }
 
     /**

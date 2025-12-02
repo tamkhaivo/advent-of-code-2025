@@ -11,8 +11,13 @@ public class day2part2 {
     private static final String FILE_PATH = "day2/day2.txt";
 
     public static void main(String[] args) {
+        long invalidIDCount = solve(FILE_PATH);
+        System.out.println(invalidIDCount);
+    }
+
+    public static long solve(String filePath) {
         List<long[]> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
@@ -25,11 +30,10 @@ public class day2part2 {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return;
+            return 0;
         }
 
-        long invalidIDCount = countInvalidIDs(lines);
-        System.out.println(invalidIDCount);
+        return countInvalidIDs(lines);
     }
 
     private static long countInvalidIDs(List<long[]> lines) {

@@ -1,11 +1,25 @@
 package day2.tests;
 
-import day2.Day2Part1ExtraCredit;
-import day2.day2part1;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import day2.day2part1;
+import day2.Day2Part1Optimized;
+import day2.Day2Part1ExtraCredit;
+import day2.day2part2;
+import day2.Day2Part2Optimized;
+import day2.Day2Part2ExtraCredit;
+
 public class Day2Tests {
+
+    // ==========================================
+    // Part 1 Unit Tests
+    // ==========================================
 
     @Test
     public void testIsInvalidID_SimplePalindrome() {
@@ -28,20 +42,6 @@ public class Day2Tests {
     @Test
     public void testIsInvalidID_RepeatedSequence() {
         // 1212 is a repeated sequence (12 repeated twice) -> INVALID ID
-        // Wait, the logic for Part 1 was just "palindrome" in the user's initial code,
-        // but the prompt said "sequence of digits repeated twice".
-        // Let's re-read the prompt carefully.
-        // "Invalid IDs by looking for any ID which is made only of some sequence of
-        // digits repeated twice."
-        // So 1212 IS invalid.
-        // My previous fix implemented:
-        // String s = Long.toString(ID);
-        // if (s.length() % 2 != 0) return false;
-        // String firstHalf = s.substring(0, s.length() / 2);
-        // String secondHalf = s.substring(s.length() / 2);
-        // return firstHalf.equals(secondHalf);
-
-        // So 1212 -> first=12, second=12 -> true.
         assertTrue(day2part1.isInvalidID(1212));
     }
 
@@ -68,16 +68,178 @@ public class Day2Tests {
 
     @Test
     public void testIsInvalidID_ExtraCredit() {
-        // Valid cases (should return true for "isInvalidID" based on problem
-        // description)
-        // Example: 1212 -> length 4, 12 == 12 -> true
         assertTrue(Day2Part1ExtraCredit.isInvalidID(1212));
         assertTrue(Day2Part1ExtraCredit.isInvalidID(99));
         assertTrue(Day2Part1ExtraCredit.isInvalidID(123123));
 
-        // Invalid cases (should return false)
         assertFalse(Day2Part1ExtraCredit.isInvalidID(123)); // Odd length
         assertFalse(Day2Part1ExtraCredit.isInvalidID(1234)); // Even length, 12 != 34
         assertFalse(Day2Part1ExtraCredit.isInvalidID(10)); // Even length, 1 != 0
+    }
+
+    // ==========================================
+    // Part 1 Optimized Unit Tests
+    // ==========================================
+
+    @Test
+    public void testRangeContains() {
+        Day2Part1Optimized.Range range = new Day2Part1Optimized.Range(10, 20);
+        assertTrue(range.contains(10));
+        assertTrue(range.contains(20));
+        assertTrue(range.contains(15));
+        assertFalse(range.contains(9));
+        assertFalse(range.contains(21));
+    }
+
+    @Test
+    public void testInvalidIDGenerator_SmallRange() {
+        // Range 10-100.
+        // Expected invalid IDs: 11, 22, ..., 99.
+        Day2Part1Optimized.InvalidIDGenerator generator = new Day2Part1Optimized.InvalidIDGenerator.Builder()
+                .withMin(10)
+                .withMax(100)
+                .build();
+
+        List<Long> ids = generator.generate().boxed().collect(Collectors.toList());
+
+        // 11, 22, 33, 44, 55, 66, 77, 88, 99 -> 9 items
+        assertEquals(9, ids.size());
+        assertTrue(ids.contains(11L));
+        assertTrue(ids.contains(99L));
+        assertFalse(ids.contains(10L));
+        assertFalse(ids.contains(100L));
+    }
+
+    @Test
+    public void testInvalidIDGenerator_LargeRange() {
+        // Range 1000-2000.
+        // Invalid IDs are 4 digits: XYXY.
+        Day2Part1Optimized.InvalidIDGenerator generator = new Day2Part1Optimized.InvalidIDGenerator.Builder()
+                .withMin(1000)
+                .withMax(2000)
+                .build();
+
+        List<Long> ids = generator.generate().boxed().collect(Collectors.toList());
+
+        // 1010, 1111, 1212, ..., 1919 -> 10 items
+        assertEquals(10, ids.size());
+        assertTrue(ids.contains(1010L));
+        assertTrue(ids.contains(1919L));
+        assertFalse(ids.contains(2020L));
+    }
+
+    @Test
+    public void testInvalidIDGenerator_ExampleCase() {
+        // 11-22 -> 11, 22
+        // 95-115 -> 99, (1010 is > 115)
+        // 998-1012 -> (999 is not invalid), 1010
+        Day2Part1Optimized.InvalidIDGenerator generator = new Day2Part1Optimized.InvalidIDGenerator.Builder()
+                .withMin(10)
+                .withMax(1012)
+                .build();
+
+        List<Long> ids = generator.generate().boxed().collect(Collectors.toList());
+
+        assertTrue(ids.contains(11L));
+        assertTrue(ids.contains(22L));
+        assertTrue(ids.contains(99L));
+        assertTrue(ids.contains(1010L));
+
+        boolean hasThreeDigit = ids.stream().anyMatch(id -> id >= 100 && id <= 999);
+        assertFalse(hasThreeDigit, "Should not generate 3-digit IDs");
+    }
+
+    // ==========================================
+    // Part 2 Optimized Unit Tests
+    // ==========================================
+
+    @Test
+    public void testGenerator_SimpleRepetition() {
+        // Test range [10, 100]
+        Day2Part2Optimized.InvalidIDGenerator generator = new Day2Part2Optimized.InvalidIDGenerator.Builder()
+                .withMin(10)
+                .withMax(100)
+                .build();
+
+        Set<Long> generated = ConcurrentHashMap.newKeySet();
+        generator.generateInParallel(generated::add);
+
+        assertTrue(generated.contains(11L));
+        assertTrue(generated.contains(99L));
+        assertFalse(generated.contains(10L));
+        assertFalse(generated.contains(100L));
+    }
+
+    @Test
+    public void testGenerator_ComplexRepetition() {
+        // Test range [1000, 2000]
+        Day2Part2Optimized.InvalidIDGenerator generator = new Day2Part2Optimized.InvalidIDGenerator.Builder()
+                .withMin(1000)
+                .withMax(2000)
+                .build();
+
+        Set<Long> generated = ConcurrentHashMap.newKeySet();
+        generator.generateInParallel(generated::add);
+
+        assertTrue(generated.contains(1212L));
+        assertTrue(generated.contains(1010L));
+        assertFalse(generated.contains(1234L));
+    }
+
+    @Test
+    public void testGenerator_TripleRepetition() {
+        // Test range [100, 1000]
+        Day2Part2Optimized.InvalidIDGenerator generator = new Day2Part2Optimized.InvalidIDGenerator.Builder()
+                .withMin(100)
+                .withMax(1000)
+                .build();
+
+        Set<Long> generated = ConcurrentHashMap.newKeySet();
+        generator.generateInParallel(generated::add);
+
+        assertTrue(generated.contains(111L)); // 1 repeated 3 times
+        assertTrue(generated.contains(555L));
+        assertFalse(generated.contains(1212L));
+    }
+
+    @Test
+    public void testGenerator_Overlap() {
+        // 1111 can be generated by seed 1 and seed 11
+        Day2Part2Optimized.InvalidIDGenerator generator = new Day2Part2Optimized.InvalidIDGenerator.Builder()
+                .withMin(1110)
+                .withMax(1112)
+                .build();
+
+        Set<Long> generated = ConcurrentHashMap.newKeySet();
+        generator.generateInParallel(generated::add);
+
+        assertTrue(generated.contains(1111L));
+        assertEquals(1, generated.size());
+    }
+
+    // ==========================================
+    // Consistency Tests
+    // ==========================================
+
+    private static final String FILE_PATH = "day2/day2.txt";
+
+    @Test
+    public void testPart1Consistency() {
+        long legacyResult = day2part1.solve(FILE_PATH);
+        long optimizedResult = Day2Part1Optimized.solve(FILE_PATH);
+        long extraCreditResult = Day2Part1ExtraCredit.solve(FILE_PATH);
+
+        assertEquals(legacyResult, optimizedResult, "Legacy and Optimized solutions should match");
+        assertEquals(legacyResult, extraCreditResult, "Legacy and Extra Credit solutions should match");
+    }
+
+    @Test
+    public void testPart2Consistency() {
+        long legacyResult = day2part2.solve(FILE_PATH);
+        long optimizedResult = Day2Part2Optimized.solve(FILE_PATH);
+        long extraCreditResult = Day2Part2ExtraCredit.solve(FILE_PATH);
+
+        assertEquals(legacyResult, optimizedResult, "Legacy and Optimized solutions should match");
+        assertEquals(legacyResult, extraCreditResult, "Legacy and Extra Credit solutions should match");
     }
 }

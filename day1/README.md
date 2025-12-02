@@ -17,7 +17,7 @@ day1/
 │   ├── SimulationStrategy.java # Strategy interface
 │   └── VectorizedSimulationStrategy.java # SIMD-optimized strategy
 └── tests/                     # Unit tests
-    └── Day1Tests.java         # JUnit tests
+    └── Day1Tests.java         # JUnit tests (Unit + Consistency)
 ```
 
 ## Prerequisites
@@ -80,5 +80,5 @@ java --add-modules jdk.incubator.vector --add-exports java.base/sun.nio.ch=ALL-U
 Run the JUnit tests to verify the correctness of the solutions.
 
 ```bash
-java --add-modules jdk.incubator.vector -jar lib/junit-platform-console-standalone-1.10.2.jar -cp ".:lib/*" -c day1.tests.Day1Tests
+java --add-modules jdk.incubator.vector -cp ".:lib/*" org.junit.platform.console.ConsoleLauncher -c day1.tests.Day1Tests
 ```

@@ -153,4 +153,32 @@ public class Day1Tests {
         assertEquals(2, result);
     }
 
+    @Test
+    public void testPart1Consistency() throws IOException {
+        String filePath = "day1/day1.txt";
+        long legacyResult = day1.Day1Part1.solve(filePath);
+        long optimizedResult = day1.Day1Part1Optimized.solve(filePath);
+        Optional<Integer> extraCreditResult = day1.Day1Part1ExtraCredit.solve(filePath);
+
+        assertTrue(extraCreditResult.isPresent(), "Extra Credit solution should return a result");
+
+        assertEquals(legacyResult, optimizedResult, "Legacy and Optimized solutions should match");
+        assertEquals(legacyResult, extraCreditResult.get().longValue(),
+                "Legacy and Extra Credit solutions should match");
+    }
+
+    @Test
+    public void testPart2Consistency() throws IOException {
+        String filePath = "day1/day1.txt";
+        long legacyResult = day1.Day1Part2.solve(filePath);
+        long optimizedResult = day1.Day1Part2Optimized.solve(filePath);
+        Optional<Integer> extraCreditResult = day1.Day1Part2ExtraCredit.solve(filePath);
+
+        assertTrue(extraCreditResult.isPresent(), "Extra Credit solution should return a result");
+
+        assertEquals(legacyResult, optimizedResult, "Legacy and Optimized solutions should match");
+        assertEquals(legacyResult, extraCreditResult.get().longValue(),
+                "Legacy and Extra Credit solutions should match");
+    }
+
 }

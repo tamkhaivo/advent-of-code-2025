@@ -28,24 +28,26 @@ public class Day2Part2Optimized {
 
     public static void main(String[] args) {
         logger.info("Starting Day 2 Part 2 Optimized calculation.");
+        long totalInvalidIDs = solve(FILE_PATH);
+        System.out.println(totalInvalidIDs);
+        logger.info("Calculation completed. Result: {}", totalInvalidIDs);
+    }
 
-        Optional<List<Range>> rangesResult = readRanges(FILE_PATH);
+    public static long solve(String filePath) {
+        Optional<List<Range>> rangesResult = readRanges(filePath);
 
         if (rangesResult.isEmpty()) {
-            logger.error("Failed to read ranges from file: {}", FILE_PATH);
-            System.exit(1);
+            logger.error("Failed to read ranges from file: {}", filePath);
+            return 0;
         }
 
         List<Range> ranges = rangesResult.get();
         if (ranges.isEmpty()) {
             logger.warn("No ranges found.");
-            System.out.println(0);
-            return;
+            return 0;
         }
 
-        long totalInvalidIDs = calculateTotalInvalidIDs(ranges);
-        System.out.println(totalInvalidIDs);
-        logger.info("Calculation completed. Result: {}", totalInvalidIDs);
+        return calculateTotalInvalidIDs(ranges);
     }
 
     /**
