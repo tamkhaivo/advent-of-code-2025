@@ -21,6 +21,8 @@ public class BenchmarkRunner {
                     nullPrintStream);
             runBenchmark("Day 1 Part 1 Optimized", () -> Day1Part1Optimized.main(new String[] {}),
                     nullPrintStream);
+            runBenchmark("Day 1 Part 1 Optimized Streams", () -> Day1Part1OptimizedStreams.main(new String[] {}),
+                    nullPrintStream);
             runBenchmark("Day 1 Part 2", () -> Day1Part2.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 1 Part 2 Extra Credit", () -> Day1Part2ExtraCredit.main(new String[] {}),
                     nullPrintStream);

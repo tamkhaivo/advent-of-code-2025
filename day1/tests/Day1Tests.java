@@ -168,6 +168,33 @@ public class Day1Tests {
     }
 
     @Test
+    public void testPart1OptimizedStreams() throws Exception {
+        // L50, R100
+        // Start: 50
+        // 1. 50 - 50 = 0 (Count 1)
+        // 2. 0 + 100 = 100 (0) (Count 2)
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("day1part1streams_test", ".txt");
+        String content = "L50\nR100";
+        java.nio.file.Files.write(tempFile, content.getBytes());
+
+        try {
+            long result = day1.Day1Part1OptimizedStreams.solve(tempFile.toString()).get();
+            assertEquals(2, result);
+        } finally {
+            java.nio.file.Files.delete(tempFile);
+        }
+    }
+
+    @Test
+    public void testPart1OptimizedStreamsConsistency() throws Exception {
+        String filePath = "day1/day1.txt";
+        long legacyResult = day1.Day1Part1.solve(filePath);
+        long streamsResult = day1.Day1Part1OptimizedStreams.solve(filePath).get();
+
+        assertEquals(legacyResult, streamsResult, "Legacy and Optimized Streams solutions should match");
+    }
+
+    @Test
     public void testPart2Consistency() throws IOException {
         String filePath = "day1/day1.txt";
         long legacyResult = day1.Day1Part2.solve(filePath);
