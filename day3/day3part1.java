@@ -1,13 +1,10 @@
 package day3;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class day3part1 {
+public class Day3Part1 {
     private static final String FILE_PATH = "day3/day3.txt";
 
     public static void main(String[] args) {
