@@ -1,4 +1,4 @@
-package day1;
+package day3;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -6,25 +6,23 @@ import java.io.PrintStream;
 public class BenchmarkRunner {
 
     private static final int WARMUP_ITERATIONS = 100;
-    private static final int MEASUREMENT_ITERATIONS = 1000;
+    private static final int MEASUREMENT_ITERATIONS = 10000;
 
     public static void main(String[] args) {
-        System.out.println("Starting Day 1 Benchmarks...");
+        System.out.println("Starting Day 3 Benchmarks...");
 
         PrintStream originalOut = System.out;
         ByteArrayOutputStream nullOut = new ByteArrayOutputStream();
         PrintStream nullPrintStream = new PrintStream(nullOut);
 
         try {
-            runBenchmark("Day 1 Part 1", () -> Day1Part1.main(new String[] {}), nullPrintStream);
-            runBenchmark("Day 1 Part 1 Extra Credit", () -> Day1Part1ExtraCredit.main(new String[] {}),
+            runBenchmark("Day 3 Part 1", () -> Day3Part1.main(new String[] {}), nullPrintStream);
+            runBenchmark("Day 3 Part 1 Extra Credit", () -> Day3Part1ExtraCredit.main(new String[] {}),
                     nullPrintStream);
-            runBenchmark("Day 1 Part 1 Optimized", () -> Day1Part1Optimized.main(new String[] {}),
+            runBenchmark("Day 3 Part 1 Optimized", () -> Day3Part1Optimized.main(new String[] {}),
                     nullPrintStream);
-            runBenchmark("Day 1 Part 2", () -> Day1Part2.main(new String[] {}), nullPrintStream);
-            runBenchmark("Day 1 Part 2 Extra Credit", () -> Day1Part2ExtraCredit.main(new String[] {}),
-                    nullPrintStream);
-            runBenchmark("Day 1 Part 2 Optimized", () -> Day1Part2Optimized.main(new String[] {}),
+            runBenchmark("Day 3 Part 2", () -> Day3Part2.main(new String[] {}), nullPrintStream);
+            runBenchmark("Day 3 Part 2 Optimized", () -> Day3Part2Optimized.main(new String[] {}),
                     nullPrintStream);
 
         } finally {

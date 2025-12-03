@@ -41,7 +41,7 @@ public class BenchmarkRunner {
         }
         System.setOut(originalOut);
 
-        // Measurement
+        // Time Measurement
         long totalTime = 0;
         long minTime = Long.MAX_VALUE;
         long maxTime = Long.MIN_VALUE;
@@ -62,9 +62,36 @@ public class BenchmarkRunner {
         double avgTimeMs = (totalTime / (double) MEASUREMENT_ITERATIONS) / 1_000_000.0;
         double minTimeMs = minTime / 1_000_000.0;
         double maxTimeMs = maxTime / 1_000_000.0;
+        double totalTimeMs = totalTime / 1_000_000.0;
 
-        System.out.printf("%-25s | Avg: %8.3f ms | Min: %8.3f ms | Max: %8.3f ms%n",
-                name, avgTimeMs, minTimeMs, maxTimeMs);
+        // Memory Measurement
+        long maxMemory = 0;
+        int memoryIterations = 5; // Reduced iterations for memory to save time
+
+        for (int i = 0; i < memoryIterations; i++) {
+            System.gc();
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            System.setOut(nullPrintStream);
+            long startMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            task.run();
+            long endMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            System.setOut(originalOut);
+
+            long used = Math.max(0, endMem - startMem);
+            maxMemory = Math.max(maxMemory, used);
+        }
+
+        double maxMemoryMB = maxMemory / (1024.0 * 1024.0);
+        int cores = Runtime.getRuntime().availableProcessors();
+
+        System.out.printf(
+                "%-25s | Total: %8.3f ms | Avg: %8.3f ms | Min: %8.3f ms | Max: %8.3f ms | Max Mem: %6.2f MB | Cores: %d%n",
+                name, totalTimeMs, avgTimeMs, minTimeMs, maxTimeMs, maxMemoryMB, cores);
         System.gc();
     }
 }
