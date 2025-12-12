@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 import day2.day2part1;
 import day2.Day2Part1Optimized;
 import day2.Day2Part1ExtraCredit;
+import day2.Day2Part1VirtualThread;
 import day2.day2part2;
 import day2.Day2Part2Optimized;
 import day2.Day2Part2ExtraCredit;
+import day2.Day2Part2VirtualThread;
 
 public class Day2Tests {
 
@@ -228,9 +230,11 @@ public class Day2Tests {
         long legacyResult = day2part1.solve(FILE_PATH);
         long optimizedResult = Day2Part1Optimized.solve(FILE_PATH);
         long extraCreditResult = Day2Part1ExtraCredit.solve(FILE_PATH);
+        long virtualThreadResult = Day2Part1VirtualThread.solve(FILE_PATH);
 
         assertEquals(legacyResult, optimizedResult, "Legacy and Optimized solutions should match");
         assertEquals(legacyResult, extraCreditResult, "Legacy and Extra Credit solutions should match");
+        assertEquals(legacyResult, virtualThreadResult, "Legacy and Virtual Thread solutions should match");
     }
 
     @Test
@@ -238,8 +242,10 @@ public class Day2Tests {
         long legacyResult = day2part2.solve(FILE_PATH);
         long optimizedResult = Day2Part2Optimized.solve(FILE_PATH);
         long extraCreditResult = Day2Part2ExtraCredit.solve(FILE_PATH);
+        long virtualThreadResult = Day2Part2VirtualThread.solve(FILE_PATH);
 
         assertEquals(legacyResult, optimizedResult, "Legacy and Optimized solutions should match");
         assertEquals(legacyResult, extraCreditResult, "Legacy and Extra Credit solutions should match");
+        assertEquals(legacyResult, virtualThreadResult, "Legacy and Virtual Thread solutions should match");
     }
 }

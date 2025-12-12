@@ -21,10 +21,14 @@ public class BenchmarkRunner {
                     nullPrintStream);
             runBenchmark("Day 2 Part 1 Optimized", () -> Day2Part1Optimized.main(new String[] {}),
                     nullPrintStream);
+            runBenchmark("Day 2 Part 1 Virt Thread", () -> Day2Part1VirtualThread.main(new String[] {}),
+                    nullPrintStream);
             runBenchmark("Day 2 Part 2", () -> day2part2.main(new String[] {}), nullPrintStream);
             runBenchmark("Day 2 Part 2 Extra Credit", () -> Day2Part2ExtraCredit.main(new String[] {}),
                     nullPrintStream);
             runBenchmark("Day 2 Part 2 Optimized", () -> Day2Part2Optimized.main(new String[] {}),
+                    nullPrintStream);
+            runBenchmark("Day 2 Part 2 Virt Thread", () -> Day2Part2VirtualThread.main(new String[] {}),
                     nullPrintStream);
         } finally {
             System.setOut(originalOut);
