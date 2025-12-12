@@ -9,8 +9,13 @@ day1/
 ├── BenchmarkRunner.java        # Runs performance benchmarks for all solutions
 ├── Day1Part1.java             # Solution for Part 1 (Sequential)
 ├── Day1Part1ExtraCredit.java  # Optimized solution for Part 1 (Vectorized)
+├── Day1Part1Optimized.java    # Optimized solution for Part 1 (SIMD + MemorySegment)
+├── Day1Part1OptimizedStreams.java # Stream-based solution for Part 1
+├── Day1Part1VirtualThread.java # Virtual Thread solution for Part 1
 ├── Day1Part2.java             # Solution for Part 2
 ├── Day1Part2ExtraCredit.java  # Optimized solution for Part 2
+├── Day1Part2Optimized.java    # Optimized solution for Part 2 (SIMD + MemorySegment)
+├── Day1Part2VirtualThread.java # Virtual Thread solution for Part 2
 ├── day1.txt                   # Input data file
 ├── simulation/                # Core simulation logic
 │   ├── DialSimulator.java     # Main simulator class (Builder pattern)
@@ -65,6 +70,21 @@ java -cp ".:lib/*" day1.Day1Part2
 **Part 2 (Extra Credit):**
 ```bash
 java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part2ExtraCredit
+```
+
+**Part 2 (Optimized):**
+```bash
+java --add-modules jdk.incubator.vector --add-exports java.base/sun.nio.ch=ALL-UNNAMED -cp ".:lib/*" day1.Day1Part2Optimized
+```
+
+**Part 1 (Virtual Thread):**
+```bash
+java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part1VirtualThread
+```
+
+**Part 2 (Virtual Thread):**
+```bash
+java --add-modules jdk.incubator.vector -cp ".:lib/*" day1.Day1Part2VirtualThread
 ```
 
 ### 3. Running Benchmarks
