@@ -3,6 +3,8 @@ package day3.tests;
 import day3.Day3Part1;
 import day3.Day3Part2;
 import day3.Day3Part1Optimized;
+import day3.Day3Part1VirtualThread;
+import day3.Day3Part2VirtualThread;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
@@ -84,6 +86,34 @@ public class Day3Tests {
             assertEquals(1798765432230L, result);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            Files.delete(tempFile);
+        }
+    }
+
+    @Test
+    public void testPart1VirtualThread() throws IOException {
+        Path tempFile = Files.createTempFile("day3part1_vt_test", ".txt");
+        String content = "123\n456";
+        Files.write(tempFile, content.getBytes());
+
+        try {
+            long result = Day3Part1VirtualThread.solve(tempFile.toString());
+            assertEquals(79, result);
+        } finally {
+            Files.delete(tempFile);
+        }
+    }
+
+    @Test
+    public void testPart2VirtualThread() throws IOException {
+        Path tempFile = Files.createTempFile("day3part2_vt_test", ".txt");
+        String content = "987654321111111\n811111111111119";
+        Files.write(tempFile, content.getBytes());
+
+        try {
+            long result = Day3Part2VirtualThread.solve(tempFile.toString());
+            assertEquals(1798765432230L, result);
         } finally {
             Files.delete(tempFile);
         }

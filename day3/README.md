@@ -10,8 +10,10 @@ day3/
 ├── Day3Part1.java                 # Solution for Part 1 (Sequential)
 ├── Day3Part1Optimized.java        # Optimized solution for Part 1
 ├── Day3Part1ExtraCredit.java      # Thread-pool solution for Part 1
+├── Day3Part1VirtualThread.java    # Virtual Thread solution for Part 1
 ├── Day3Part2.java                 # Solution for Part 2 (Sequential)
 ├── Day3Part2Optimized.java        # Optimized solution for Part 2
+├── Day3Part2VirtualThread.java    # Virtual Thread solution for Part 2
 ├── day3.txt                       # Input data file
 └── tests/                         # Unit tests
     └── Day3Tests.java             # JUnit tests (Unit + Consistency)
@@ -62,6 +64,16 @@ java -cp ".:lib/*" day3.Day3Part2
 **Part 2 (Optimized):**
 ```bash
 java -cp ".:lib/*" day3.Day3Part2Optimized
+```
+
+**Part 1 (Virtual Thread):**
+```bash
+java -cp ".:lib/*" day3.Day3Part1VirtualThread
+```
+
+**Part 2 (Virtual Thread):**
+```bash
+java -cp ".:lib/*" day3.Day3Part2VirtualThread
 ```
 
 ### 3. Running Benchmarks
