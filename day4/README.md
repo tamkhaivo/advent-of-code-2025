@@ -9,9 +9,12 @@ day4/
 ├── BenchmarkRunner.java           # Runs performance benchmarks
 ├── Day4Part1.java                 # Solution for Part 1 (Sequential)
 ├── Day4Part1Optimized.java        # Optimized solution for Part 1
+├── Day4Part1AIOptimized.java      # AI Optimized solution for Part 1 (Java 25)
+├── Day4Part1VirtualThread.java    # Virtual Thread solution for Part 1
 ├── Day4Part2.java                 # Solution for Part 2 (Sequential)
 ├── Day4Part2Optimized.java        # Optimized solution for Part 2
 ├── Day4Part2AIOptimized.java      # AI Optimized solution for Part 2 (Java 25)
+├── Day4Part2VirtualThread.java    # Virtual Thread solution for Part 2
 ├── day4.txt                       # Input data file
 └── tests/                         # Unit tests
     └── Day4Tests.java             # JUnit tests (Unit + Consistency)
@@ -67,6 +70,16 @@ java --add-modules jdk.incubator.vector --enable-native-access=ALL-UNNAMED -cp "
 **Part 2 (AI Optimized - Java 25+):**
 ```bash
 java --add-modules jdk.incubator.vector --enable-native-access=ALL-UNNAMED -cp ".:lib/*" day4.Day4Part2AIOptimized
+```
+
+**Part 1 (Virtual Thread):**
+```bash
+java -cp ".:lib/*" day4.Day4Part1VirtualThread
+```
+
+**Part 2 (Virtual Thread):**
+```bash
+java -cp ".:lib/*" day4.Day4Part2VirtualThread
 ```
 
 ### 3. Running Benchmarks
